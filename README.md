@@ -1,7 +1,6 @@
 # 항해99 5기 D반 주특기PBL 1주차
-
 ## 나만의 사전 만들기 
-----------
+
 ### Requirements
 
 1. 나만의 사전 완성
@@ -24,6 +23,7 @@
 yarn<br>
 material-ui<br>
 firebase<br>
+firebase-tools<br>
 redux<br>
 redux-thunk<br>
 react-redux<br>
