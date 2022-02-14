@@ -56,12 +56,12 @@ const Container = styled.div`
 
 const Line = styled.hr`
   margin: 16px 0px;
-  border: 1px dotted #a60303;
+  border: 1px dotted #5aadbf;
 `;
 const Card = styled.div`
   padding: 16px;
   margin: 8px;
-  background-color: #f2efeb;
+  background-color: #bdd9f2;
   border: 1px solid #0a6abf;
   label {
     font-size: 12px;

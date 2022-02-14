@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import AddDictionary from "./AddDictionary";
 import MyDictionary from "./MyDictionary";
 import NotFound from "./NotFound";
 import { loadDictionaryFB } from "../redux/modules/dictionary";
+import Spinner from "./Spinner"
 import "./App.css";
 
 function App(props) {
-  console.log("index.js: ", props);
-
+  const is_loaded = useSelector((state) => state.dictionary.is_loaded)
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(loadDictionaryFB());
   }, []);
@@ -26,6 +27,7 @@ function App(props) {
           <Route component={NotFound} />
         </Switch>
       </Wrapper>
+      {!is_loaded && <Spinner />}
     </div>
   );
 }

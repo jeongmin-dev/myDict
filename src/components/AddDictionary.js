@@ -21,7 +21,6 @@ const AddDictionary = () => {
       meaning: inputMeaning.current.value,
       example: inputExample.current.value,
     };
-    console.log(new_dictionary);
     dispatch(createDictionaryFB(new_dictionary));
     history.goBack();
   };
@@ -67,5 +66,5 @@ export default AddDictionary;
 
 const Line = styled.hr`
   margin: 16px 0px;
-  border: 1px dotted #a60303;
+  border: 1px dotted #5AADBF;
 `;

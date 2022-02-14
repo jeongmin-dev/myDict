@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 
 const initialState = {
+  is_loaded: false,
   list: [
     {
       word: "test",
@@ -20,19 +21,27 @@ const initialState = {
 };
 
 // Actions
+const LOADED = "dictionary/LOADED";
 const LOAD = "dictionary/LOAD";
 const CREATE = "dictionary/CREATE";
 // const UPDATE = "dictionary/UPDATE";
-// const REMOVE = 'my-app/widgets/REMOVE';
+const DELETE = "dictionary/DELETE";
 
 // Action Creators
-export const loadDictionary = (dictionary) => {
-  return { type: LOAD, dictionary: dictionary };
-};
+export function isLoaded(loaded) {
+  return { type: LOADED, loaded };
+}
+export function loadDictionary(dictionary) {
+  return { type: LOAD, dictionary: dictionary, is_loaded: true };
+}
 
-export const createDictionary = (dictionary) => {
+export function createDictionary(dictionary) {
   return { type: CREATE, dictionary: dictionary };
-};
+}
+
+export function deleteDictionary(dictionary_idx) {
+  return { type: DELETE, dictionary_idx };
+}
 
 // Middlewares
 export const loadDictionaryFB = () => {
@@ -51,6 +60,7 @@ export const loadDictionaryFB = () => {
 
 export const createDictionaryFB = (dictionary) => {
   return async function (dispatch) {
+    dispatch(isLoaded(false));
     const docRef = await addDoc(collection(db, "my_dictionary"), dictionary);
     const dictionary_data = { id: docRef.id, ...dictionary };
 
@@ -65,10 +75,18 @@ export default function reducer(state = initialState, action = {}) {
     case "dictionary/LOAD":
       return {
         list: action.dictionary,
+        is_loaded: true,
       };
     case "dictionary/CREATE":
       const new_dictionary_list = [...state.list, action.dictionary];
-      return { ...state, list: new_dictionary_list };
+      return { ...state, list: new_dictionary_list, is_loaded: true };
+
+    case "dictionary/DELETE": {
+      const new_dictionary_list = state.list.filter((l, idx) => {
+        return parseInt(action.dictionary_idx) !== idx;
+      });
+      return { list: new_dictionary_list };
+    }
 
     default:
       return state;
