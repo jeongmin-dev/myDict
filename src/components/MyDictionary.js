@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
 const MyDictionary = (props) => {
   const history = useHistory();
@@ -10,7 +12,7 @@ const MyDictionary = (props) => {
   return (
     <>
       <Container>
-        <h1>My Dictionary</h1>
+        <h1>나만의 단어장</h1>
         <Line />
         {my_dictionary.map((dict, idx) => {
           return (
@@ -24,13 +26,16 @@ const MyDictionary = (props) => {
             </Card>
           );
         })}
-        <AddBtn
+        <Fab
+          style={{ position: "absolute", bottom: "20px", right: "20px" }}
+          color="primary"
+          aria-label="add"
           onClick={() => {
             history.push("/dictionary/add");
           }}
         >
-          +
-        </AddBtn>
+          <AddIcon />
+        </Fab>
       </Container>
     </>
   );
@@ -69,20 +74,4 @@ const Card = styled.div`
   p:last-child {
     color: #0a6abf;
   }
-`;
-
-const AddBtn = styled.button`
-  display: inline-block;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 64px;
-  height: 64px;
-  background-color: #0a6abf;
-  border: none;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  font-size: 48px;
-  border-radius: 50%;
 `;
