@@ -24,47 +24,51 @@ const initialState = {
 const LOADED = "dictionary/LOADED";
 const LOAD = "dictionary/LOAD";
 const CREATE = "dictionary/CREATE";
-// const UPDATE = "dictionary/UPDATE";
-const DELETE = "dictionary/DELETE";
+const UPDATE = "dictionary/UPDATE";
+// const DELETE = "dictionary/DELETE";
 
 // Action Creators
-export function isLoaded(loaded) {
+export const isLoaded = (loaded) => {
   return { type: LOADED, loaded };
-}
-export function loadDictionary(dictionary) {
-  return { type: LOAD, dictionary: dictionary, is_loaded: true };
-}
+};
+export const loadDictionary = (dictionary) => {
+  return { type: LOAD, dictionary, is_loaded: true };
+};
 
-export function createDictionary(dictionary) {
-  return { type: CREATE, dictionary: dictionary };
-}
+export const createDictionary = (dictionary) => {
+  return { type: CREATE, dictionary };
+};
 
-export function deleteDictionary(dictionary_idx) {
-  return { type: DELETE, dictionary_idx };
-}
+export const updateDictionary = (dictionary) => {
+  return { type: UPDATE, dictionary };
+};
 
 // Middlewares
 export const loadDictionaryFB = () => {
   return async function (dispatch) {
     const dictionary_data = await getDocs(collection(db, "my_dictionary"));
-
-    let dictionary_list = [];
-
+    const dictionary_list = [];
     dictionary_data.forEach((dict) => {
       dictionary_list.push({ id: dict.id, ...dict.data() });
     });
-
     dispatch(loadDictionary(dictionary_list));
   };
 };
 
 export const createDictionaryFB = (dictionary) => {
   return async function (dispatch) {
-    dispatch(isLoaded(false));
     const docRef = await addDoc(collection(db, "my_dictionary"), dictionary);
     const dictionary_data = { id: docRef.id, ...dictionary };
 
-    dispatch(createDictionary(dictionary_data));
+    dispatch(createDictionary(dictionary_data), isLoaded(false));
+  };
+};
+
+export const updateDictionaryFB = (dictionary) => {
+  return async function (dispatch) {
+    const docRef = await doc(db, "my_dictionary", dictionary.id);
+    await updateDoc(docRef, dictionary);
+    dispatch(updateDictionary(dictionary));
   };
 };
 
@@ -80,13 +84,12 @@ export default function reducer(state = initialState, action = {}) {
     case "dictionary/CREATE":
       const new_dictionary_list = [...state.list, action.dictionary];
       return { ...state, list: new_dictionary_list, is_loaded: true };
-
-    case "dictionary/DELETE": {
-      const new_dictionary_list = state.list.filter((l, idx) => {
-        return parseInt(action.dictionary_idx) !== idx;
-      });
-      return { list: new_dictionary_list };
-    }
+    case "dictionary/UPDATE":
+      return {
+        list: state.dictionary.map((dic) =>
+          dic.id === action.dic.id ? action.dic : dic
+        ),
+      };
 
     default:
       return state;

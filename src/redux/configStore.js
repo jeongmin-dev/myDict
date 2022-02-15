@@ -4,6 +4,7 @@ import dictionary from "./modules/dictionary";
 import thunk from "redux-thunk";
 
 export const history = createBrowserHistory();
+
 const middlewares = [thunk];
 
 const enhancer = applyMiddleware(...middlewares);
