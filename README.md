@@ -15,9 +15,10 @@
     - 게시글 목록을 파이어스토어에 저장하기 :white_check_mark:
 - 추가 기능(필수X)
     - 무한 스크롤 붙이기
-    - 게시글 수정해보기
+    - 게시글 수정해보기 :white_check_mark:
 
 2. 파이어베이스(or S3)(으)로 배포
+- 파이어베이스로 배포
 -----------
 ### Packages
 yarn<br>
@@ -30,4 +31,7 @@ react-redux<br>
 react-router-dom<br>
 styled-components
 
+--------------
+### Demo
+mydictionary-eba4d.firebaseapp.com
 

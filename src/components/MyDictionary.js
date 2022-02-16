@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import Card from "./Card";
+import img from "../img/img.png";
 
 const MyDictionary = (props) => {
   const navigate = useNavigate();
@@ -16,8 +17,8 @@ const MyDictionary = (props) => {
         <h1>나만의 단어장</h1>
         <Line />
         {my_dictionary.length === 0 ? (
-          <div>
-            <h1>단어를 추가해 주세요</h1>
+          <div style={{ textAlign: "center" }}>
+            <h3>단어를 추가해 주세요</h3>
           </div>
         ) : (
           my_dictionary.map((dict) => {

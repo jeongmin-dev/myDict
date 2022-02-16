@@ -11,6 +11,13 @@ const Card = ({ post }) => {
   const dispatch = useDispatch();
   const { id, word, meaning, example } = post;
 
+  const isCancel = () => {
+    if (window.confirm("단어를 삭제할까요?")) {
+      alert("삭제되었습니다.");
+      dispatch(deleteDictionaryFB(id));
+    }
+  };
+
   return (
     <Post>
       <div>
@@ -27,12 +34,7 @@ const Card = ({ post }) => {
             navigate(`/update/${id}`, { state: post });
           }}
         />
-        <DeleteIcon
-          onClick={() => {
-            alert("삭제하시겠습니까?");
-            dispatch(deleteDictionaryFB(id));
-          }}
-        />
+        <DeleteIcon onClick={isCancel} />
       </ActionBox>
     </Post>
   );
