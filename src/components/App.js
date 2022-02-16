@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AddDictionary from "./AddDictionary";
 import MyDictionary from "./MyDictionary";
 import NotFound from "./NotFound";
-import UpdateDictionary from "./UpdateDictionary";
 import { isLoaded, loadDictionaryFB } from "../redux/modules/dictionary";
 import Spinner from "./Spinner"
 import "./App.css";
 
-function App(props) {
+function App() {
   const is_loaded = useSelector((state) => state.dictionary.is_loaded)
   const dispatch = useDispatch();
 
@@ -21,13 +20,12 @@ function App(props) {
   return (
     <div className="App">
       <Wrapper>
-        <Switch>
-          <Route path="/" exact component={MyDictionary} />
-          <Route path="/dictionary" exact component={MyDictionary} />
-          <Route path="/dictionary/add" component={AddDictionary} />
-          <Route path="/dictionary/update" component={UpdateDictionary} />
-          <Route component={NotFound} />
-        </Switch>
+        <Routes>
+          <Route path="/" exact element={<MyDictionary />} />
+          <Route path="/add" element={<AddDictionary />} />
+          <Route path="/update/:dictid" element={<AddDictionary />} />
+          <Route element={NotFound} />
+        </Routes>
       </Wrapper>
       {!is_loaded && <Spinner />}
     </div>

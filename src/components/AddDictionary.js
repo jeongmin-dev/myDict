@@ -1,17 +1,39 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { createDictionaryFB } from "../redux/modules/dictionary";
+import {
+  createDictionaryFB,
+  updateDictionaryFB,
+} from "../redux/modules/dictionary";
 import Button from "@mui/material/Button";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const AddDictionary = () => {
+const AddDictionary = ({post}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const inputWord = useRef();
   const inputMeaning = useRef();
   const inputExample = useRef();
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const type = location.pathname.split('/')[1]
+
+  useEffect(() => {
+    if (location.state !== null) {
+      const {word, meaning, example} = location.state
+      inputWord.current.value = word
+      inputMeaning.current.value = meaning
+      inputExample.current.value = example
+    }
+  }, [location.state]);
+
+  let titleType;
+  if (type === "update") {
+    titleType = "수정";
+  } else {
+    titleType = "추가";
+  }
 
   const addDictionary = () => {
     const new_dictionary = {
@@ -19,13 +41,17 @@ const AddDictionary = () => {
       meaning: inputMeaning.current.value,
       example: inputExample.current.value,
     };
-    dispatch(createDictionaryFB(new_dictionary));
-    history.push("/");
+    if (type === "update") {
+      dispatch(updateDictionaryFB(location.state.id, new_dictionary));
+    } else {
+      dispatch(createDictionaryFB(new_dictionary));
+    }
+    navigate("/");
   };
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>단어 추가하기</h1>
+      <h1 style={{ textAlign: "center" }}>단어 {titleType}하기</h1>
       <Line />
       <Box>
         <div>
@@ -41,14 +67,14 @@ const AddDictionary = () => {
           <input type="text" ref={inputExample} />
         </div>
         <Button variant="outlined" onClick={addDictionary}>
-          추가하기
+          {titleType}하기
         </Button>
         <Button
           sx={{ margin: 1 }}
           color="secondary"
           variant="outlined"
           onClick={() => {
-            history.push("/");
+            navigate("/");
           }}
         >
           메인으로
@@ -62,7 +88,7 @@ export default AddDictionary;
 
 const Line = styled.hr`
   margin: 16px 0px;
-  border: 1px dotted #5aadbf;
+  border: 1px dotted #8c4830;
 `;
 
 const Box = styled.div`

@@ -1,27 +1,29 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateDictionaryFB } from "../redux/modules/dictionary";
 import Button from "@mui/material/Button";
-import { useLocation } from "react-router-dom";
 
 const UpdateDictionary = (props) => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
-  const dict_index = location.pathname.split("/")[3];
+  const navigate = useNavigate();
+  const my_dictionary = useSelector((state) => state.dictionary.list);
+  console.log(my_dictionary)
 
-  const dictId = useSelector((state) => state.dictionary.list[dict_index].id);
-  const dictWord = useSelector(
-    (state) => state.dictionary.list[dict_index].word
-  );
-  const dictMeaning = useSelector(
-    (state) => state.dictionary.list[dict_index].meaning
-  );
-  const dictExample = useSelector(
-    (state) => state.dictionary.list[dict_index].example
-  );
+  // const dictId = useSelector((state) => state.dictionary.list.id);
+  // const dictWord = useSelector(
+  //   (state) => state.dictionary.list[dict_index].word
+  // );
+  // const dictMeaning = useSelector(
+  //   (state) => state.dictionary.list[dict_index].meaning
+  // );
+  // const dictExample = useSelector(
+  //   (state) => state.dictionary.list[dict_index].example
+  // );
+  const onChange = (e) => {
+    console.log(e.target.value)
+  };
 
   const word = React.useRef(null);
   const meaning = React.useRef(null);
@@ -33,8 +35,8 @@ const UpdateDictionary = (props) => {
       meaning: meaning.current.value,
       example: example.current.value,
     };
-    dispatch(updateDictionaryFB(dictId, update_dictionary));
-    history.push("/");
+    dispatch(updateDictionaryFB("dictId", update_dictionary));
+    navigate("/");
   };
 
   return (
@@ -44,15 +46,15 @@ const UpdateDictionary = (props) => {
       <Box>
         <div>
           <label>단어</label>
-          <input type="text" placeholder={dictWord} ref={word} />
+          <input type="text" onChange={onChange} value={"dictWord"} ref={word} />
         </div>
         <div>
           <label>설명</label>
-          <input type="text" placeholder={dictMeaning} ref={meaning} />
+          <input type="text" placeholder={"dictMeaning"} ref={meaning} />
         </div>
         <div>
           <label>예시</label>
-          <input type="text" placeholder={dictExample} ref={example} />
+          <input type="text" placeholder={"dictExample"} ref={example} />
         </div>
         <Button variant="outlined" onClick={UpdateDictionary}>수정하기</Button>
         <Button
@@ -60,7 +62,7 @@ const UpdateDictionary = (props) => {
           color="secondary"
           variant="outlined"
           onClick={() => {
-            history.push('/');
+            navigate('/');
           }}
         >
           메인으로

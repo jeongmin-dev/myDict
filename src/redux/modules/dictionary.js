@@ -25,19 +25,19 @@ export const isLoaded = (loaded) => {
   return { type: LOADED, loaded };
 };
 export const loadDictionary = (dictionary) => {
-  return { type: LOAD, dictionary, is_loaded: true };
+  return { type: LOAD, dictionary: dictionary, is_loaded: true };
 };
 
 export const createDictionary = (dictionary) => {
-  return { type: CREATE, dictionary };
+  return { type: CREATE, dictionary: dictionary };
 };
 
-export const deleteDictionary = (dictionary) => {
-  return { type: DELETE, dictionary };
+export const deleteDictionary = (dictionaryId) => {
+  return { type: DELETE, dictionary: dictionaryId };
 };
 
 export const updateDictionary = (dictionary) => {
-  return { type: UPDATE, dictionary };
+  return { type: UPDATE, dictionary: dictionary };
 };
 
 // Middlewares
@@ -56,22 +56,22 @@ export const createDictionaryFB = (dictionary) => {
   return async function (dispatch) {
     const docRef = await addDoc(collection(db, "my_dictionary"), dictionary);
     const dictionary_data = { id: docRef.id, ...dictionary };
-    dispatch(createDictionary(dictionary_data), isLoaded(false));
+    dispatch(createDictionary(dictionary_data));
   };
 };
 
-export const deleteDictionaryFB = (dictionary) => {
+export const deleteDictionaryFB = (dictionaryId) => {
   return async function (dispatch) {
-    const docRef = doc(db, "my_dictionary", dictionary);
+    const docRef = doc(db, "my_dictionary", dictionaryId);
     await deleteDoc(docRef);
-    dispatch(loadDictionaryFB());
+    dispatch(deleteDictionary(dictionaryId));
   };
 };
 
 export const updateDictionaryFB = (dictId, dictionary) => {
   return async function (dispatch) {
     const docRef = doc(db, "my_dictionary", dictId);
-    await updateDoc(docRef, dictionary)
+    await updateDoc(docRef, dictionary);
     dispatch(loadDictionaryFB());
   };
 };
@@ -91,17 +91,24 @@ export default function reducer(state = initialState, action = {}) {
     }
     case "dictionary/CREATE": {
       const new_dictionary_list = [...state.list, action.dictionary];
-      return { ...state, list: new_dictionary_list, is_loaded: true };
+      return { list: new_dictionary_list, is_loaded: true };
     }
     case "dictionary/DELETE": {
-      return { ...state, is_loaded: true };
+      const new_dictionary_list = state.list.filter((dictionary) => {
+        return dictionary.id !== action.dictionary;
+      });
+      return { list: new_dictionary_list, is_loaded: true };
     }
     case "dictionary/UPDATE": {
-      return {
-        ...state,
-        isLoaded: true,
-      };
+      const new_dictionary_list = state.list.map((dictionary) => {
+        if (dictionary.word === action.dictionary.word) {
+          return action.dictionary;
+        }
+        return dictionary;
+      });
+      return { list: new_dictionary_list, is_loaded: true };
     }
+
     default:
       return state;
   }
