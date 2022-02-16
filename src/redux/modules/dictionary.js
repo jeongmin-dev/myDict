@@ -2,7 +2,6 @@ import { db } from "../../firebase";
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   addDoc,
   updateDoc,
@@ -11,21 +10,15 @@ import {
 
 const initialState = {
   is_loaded: false,
-  list: [
-    {
-      word: "test",
-      meaning: "test",
-      example: "test",
-    },
-  ],
+  list: [],
 };
 
 // Actions
 const LOADED = "dictionary/LOADED";
 const LOAD = "dictionary/LOAD";
 const CREATE = "dictionary/CREATE";
+const DELETE = "dictionary/DELETE";
 const UPDATE = "dictionary/UPDATE";
-// const DELETE = "dictionary/DELETE";
 
 // Action Creators
 export const isLoaded = (loaded) => {
@@ -37,6 +30,10 @@ export const loadDictionary = (dictionary) => {
 
 export const createDictionary = (dictionary) => {
   return { type: CREATE, dictionary };
+};
+
+export const deleteDictionary = (dictionary) => {
+  return { type: DELETE, dictionary };
 };
 
 export const updateDictionary = (dictionary) => {
@@ -59,16 +56,23 @@ export const createDictionaryFB = (dictionary) => {
   return async function (dispatch) {
     const docRef = await addDoc(collection(db, "my_dictionary"), dictionary);
     const dictionary_data = { id: docRef.id, ...dictionary };
-
     dispatch(createDictionary(dictionary_data), isLoaded(false));
   };
 };
 
-export const updateDictionaryFB = (dictionary) => {
+export const deleteDictionaryFB = (dictionary) => {
   return async function (dispatch) {
-    const docRef = await doc(db, "my_dictionary", dictionary.id);
-    await updateDoc(docRef, dictionary);
-    dispatch(updateDictionary(dictionary));
+    const docRef = doc(db, "my_dictionary", dictionary);
+    await deleteDoc(docRef);
+    dispatch(loadDictionaryFB());
+  };
+};
+
+export const updateDictionaryFB = (dictId, dictionary) => {
+  return async function (dispatch) {
+    const docRef = doc(db, "my_dictionary", dictId);
+    await updateDoc(docRef, dictionary)
+    dispatch(loadDictionaryFB());
   };
 };
 
@@ -76,21 +80,28 @@ export const updateDictionaryFB = (dictionary) => {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     // do reducer stuff
-    case "dictionary/LOAD":
+    case "dictionary/LOADED": {
+      return { ...state, is_loaded: action.loaded };
+    }
+    case "dictionary/LOAD": {
       return {
         list: action.dictionary,
         is_loaded: true,
       };
-    case "dictionary/CREATE":
+    }
+    case "dictionary/CREATE": {
       const new_dictionary_list = [...state.list, action.dictionary];
       return { ...state, list: new_dictionary_list, is_loaded: true };
-    case "dictionary/UPDATE":
+    }
+    case "dictionary/DELETE": {
+      return { ...state, is_loaded: true };
+    }
+    case "dictionary/UPDATE": {
       return {
-        list: state.dictionary.map((dic) =>
-          dic.id === action.dic.id ? action.dic : dic
-        ),
+        ...state,
+        isLoaded: true,
       };
-
+    }
     default:
       return state;
   }

@@ -1,17 +1,17 @@
 import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { createDictionaryFB } from "../redux/modules/dictionary";
 import Button from "@mui/material/Button";
+import { useHistory } from "react-router-dom";
 
 const AddDictionary = () => {
   const inputWord = useRef();
   const inputMeaning = useRef();
   const inputExample = useRef();
 
-  const history = useHistory();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const addDictionary = () => {
     const new_dictionary = {
@@ -19,9 +19,8 @@ const AddDictionary = () => {
       meaning: inputMeaning.current.value,
       example: inputExample.current.value,
     };
-
     dispatch(createDictionaryFB(new_dictionary));
-    history.goBack();
+    history.push("/");
   };
 
   return (
@@ -49,7 +48,7 @@ const AddDictionary = () => {
           color="secondary"
           variant="outlined"
           onClick={() => {
-            history.goBack();
+            history.push("/");
           }}
         >
           메인으로

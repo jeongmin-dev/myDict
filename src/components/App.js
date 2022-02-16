@@ -5,7 +5,8 @@ import { Route, Switch } from "react-router-dom";
 import AddDictionary from "./AddDictionary";
 import MyDictionary from "./MyDictionary";
 import NotFound from "./NotFound";
-import { loadDictionaryFB } from "../redux/modules/dictionary";
+import UpdateDictionary from "./UpdateDictionary";
+import { isLoaded, loadDictionaryFB } from "../redux/modules/dictionary";
 import Spinner from "./Spinner"
 import "./App.css";
 
@@ -14,8 +15,8 @@ function App(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadDictionaryFB());
-  }, []);
+    dispatch(loadDictionaryFB(), isLoaded(false));
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -24,6 +25,7 @@ function App(props) {
           <Route path="/" exact component={MyDictionary} />
           <Route path="/dictionary" exact component={MyDictionary} />
           <Route path="/dictionary/add" component={AddDictionary} />
+          <Route path="/dictionary/update" component={UpdateDictionary} />
           <Route component={NotFound} />
         </Switch>
       </Wrapper>
