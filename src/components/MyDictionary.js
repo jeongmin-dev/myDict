@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import Card from "./Card";
-import img from "../img/img.png";
 
 const MyDictionary = (props) => {
   const navigate = useNavigate();
@@ -59,7 +58,7 @@ const Line = styled.hr`
 `;
 const AddBtn = styled.div`
   button {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     right: 20px;
     background-color: #d97904;
@@ -67,5 +66,10 @@ const AddBtn = styled.div`
     svg {
       font-size: 40px;
     }
+  }
+  button::after {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
   }
 `;

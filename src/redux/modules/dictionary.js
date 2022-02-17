@@ -101,7 +101,7 @@ export default function reducer(state = initialState, action = {}) {
     }
     case "dictionary/UPDATE": {
       const new_dictionary_list = state.list.map((dictionary) => {
-        if (dictionary.word === action.dictionary.word) {
+        if (dictionary.id === action.dictionary.id) {
           return action.dictionary;
         }
         return dictionary;
