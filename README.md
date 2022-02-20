@@ -1,4 +1,5 @@
 # 항해99 5기 D반 주특기PBL 1주차
+
 ## 나만의 사전 만들기 
 
 ### Requirements
@@ -33,5 +34,5 @@ styled-components
 
 --------------
 ### Demo
-[나만의 단어장]보러가기(https://mydictionary-eba4d.firebaseapp.com)
+[나만의 단어장](https://mydictionary-eba4d.firebaseapp.com)
 
