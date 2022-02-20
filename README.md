@@ -34,5 +34,5 @@ styled-components
 
 --------------
 ### Demo
-[나만의 단어장](https://mydictionary-eba4d.firebaseapp.com)
+[나만의 단어장](https://mydictionary-eba4d.firebaseapp.com) 보러가기
 
